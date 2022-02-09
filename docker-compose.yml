@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+    postgresdb:
+        build:
+            context: ./docker
+            dockerfile: Dockerfile
+        environment:
+          - POSTGRES_PASSWORD=5656
+        volumes:
+          - ./docker/init.sql:/docker-entrypoint-initdq.d/init.sql
+        ports:
+          - "5000:5000"
+
+    server:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        volumes:
+            - ./:/usr/src/app
+        depends_on:
+            - postgresdb
+        ports:
+            - "8000:8000"
